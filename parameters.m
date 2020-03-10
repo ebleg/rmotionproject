@@ -1,17 +1,31 @@
 %% PARAMETERS
-% Define parameters for simulation and control
+%
+% Emiel Legrand
+% 01/03/2020
+%
+% -------------------------------------------------------------------------
+
 param = struct();
 
-%% Environmental properties
-param.env.rho = 1.225; % Air density
-param.env.g = 9.80665; % Gravitational acceleration
+%% Quadcopter properties
+param.drone.Ixx = 7.5e-3;
+param.drone.Iyy = 7.5e-3;
+param.drone.Izz = 1.3e-2;
+param.drone.I = diag([param.drone.Ixx param.drone.Iyy param.drone.Izz]);
+param.drone.l = 0.23;
+param.drone.m = 0.2; % ????????????????????? look up in doctoral thesis
 
-%% Drone physical properties
-param.drone.m = 2;  % Drone mass
-param.drone.I = diag([0.5829 0.7169 1.].*1e-4);  % Drone moment of inertia
-param.drone.r = [0.1 0.1 0.1 0.1]; % Distance between c.m. of the drone and rotor centres
+param.drone.rotor.J = 6e-5;
+param.drone.rotor.Kf = 3.13e-5;
+param.drone.rotor.Km = 7.5e-7;
 
-%% Rotor properties
-param.drone.rotor.kT = 1;   % Rotor thrust coefficient
-param.drone.rotor.kQ = 1;   % Rotor torque coefficient
-param.drone.rotor.D = 0.07;  % Rotor diameter
+param.drone.Kt = diag([0.1 0.1 0.15]);
+
+param.sp.psi0 = 0;
+
+%% General parameters
+param.env.g = 9.80665;
+
+%% Initial conditions
+param.q0 = [0 0 2]';
+param.qdot0 = [0 0 0]';

@@ -2,6 +2,11 @@
 clear;
 close all;
 
+%% Parameters
+run parameters
+run linearModel
+
+%% Set up field plotting
 field = struct();
 field.height = 20;
 field.width = 20;
@@ -35,8 +40,7 @@ nodes(:, 1) = start;
 nodeDist = @(q1, q2) sum((q2 - q1).^2, 1);
 
 for i=2:N+1
-    q_new 
-    field.bound.*rand(2,1);
+    q_new = field.bound.*rand(2,1);
     [~, I] = min(nodeDist(q_new, nodes));
     edges(:, i) = [I, i]; % "connection via indices"
     nodes(:, i) = q_new;
