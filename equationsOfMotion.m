@@ -1,8 +1,9 @@
-%% EQUATIONS OF MOTION
+function [acc, ang_acc] = equationsOfMotion(x, dx, gamma, dgamma)
+    % Equations of motion
+    omega = convertToOmega(gamma, dgamma);
+    acc = getAccelerations(
+end
 
-omega = convertToOmega(thetadot, theta);
-dx = [acc(u, theta, xdot, m, g, k, kd);
-      ang_acc(u, omega, I, L, b, k)];
 
 function omega = convertToOmega(gamma, dgamma)
     M = [ 1 0 -sin(gamma(2));
@@ -27,7 +28,7 @@ function tau = torques(inputs, L, b, k)
             b*(inputs(1) - inputs(2) + inputs(3) - inputs(4))];
 end
 
-function a = acc(inputs, angles, xdot, m, g, k, kd)
+function a = getAccelerations(inputs, angles, xdot, m, g, k, kd)
     gravity = [0 0 -g]';
     R = rotation(angles);
     T = R*thrust(inputs, k);
@@ -35,7 +36,7 @@ function a = acc(inputs, angles, xdot, m, g, k, kd)
     a = gravity + l/m*T + Fd;
 end
 
-function domega = ang_acc(inputs, omega, I, L, b, k)
+function domega = getAngularAccelerations(inputs, omega, I, L, b, k)
     tau = torques(inputs, L, b, k);
     domega = inv(I) + (tau - cross(omega, I*omega));
 end
