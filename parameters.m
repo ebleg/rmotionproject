@@ -23,6 +23,9 @@ param.drone.Kt = diag([0.1 0.1 0.15]);
 
 param.sp.psi0 = 0;
 
+param.pid.Kd = 1;
+param.pid.Kp = 1;
+
 %% General parameters
 param.env.g = 9.80665;
 
