@@ -39,9 +39,23 @@ edges = nan(2, N+1);
 nodes(:, 1) = start;
 nodeDist = @(q1, q2) sum((q2 - q1).^2, 1);
 
+dim = 2;
+gamma = 3; % can be calculated explicitely
+
 for i=2:N+1
     q_new = field.bound.*rand(2,1);
-    [~, I] = min(nodeDist(q_new, nodes));
+
+    % check if q_new is in collision
+    
+    % compute radius with q_new as center
+    ball_radius = gamma * nthroot(log(i-1)/(i-1),dim);
+    
+%     original
+%     [~, I] = min(nodeDist(q_new, nodes));
+%     edges(:, i) = [I, i]; % "connection via indices"
+%     nodes(:, i) = q_new;
+    q_near = rangesearch(q_new, nodes, ball_radius);
+    [~, I] = min(nodeDist(q_new, q_near));
     edges(:, i) = [I, i]; % "connection via indices"
     nodes(:, i) = q_new;
 end
@@ -51,5 +65,3 @@ for i=2:N+1
          [nodes(2, edges(1, i)) nodes(2, edges(2, i))], ...
          'Color', 'black')
 end
-
-
