@@ -28,6 +28,9 @@ param.pid.Kp = 1;
 
 %% General parameters
 param.env.g = 9.80665;
+param.size_obs= 10;
+param.amount_obs=30;
+param.verti=12;
 
 %% Initial conditions
 param.q0 = [0 0 2]';

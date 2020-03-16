@@ -39,7 +39,7 @@ grid on; grid minor;
 % scatter(goal(1), goal(2), 'filled', 'MarkerEdgeColor', [0 0 0]);
 
 %% Obstacle in 3D
-[shp] = polyhedron(field.bound, amount);
+[shapes]= PlayingField(param.amount_obs,param.size_obs,[field.length field.width field.height],param.verti);
 hold on;
 scatter3(start(1), start(2), start(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
 scatter3(goal(1), goal(2), goal(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
