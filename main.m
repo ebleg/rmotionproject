@@ -39,42 +39,38 @@ grid on; grid minor;
 % scatter(goal(1), goal(2), 'filled', 'MarkerEdgeColor', [0 0 0]);
 
 %% Obstacle in 3D
-[shapes]= PlayingField(param.amount_obs,param.size_obs,[field.length field.width field.height],param.verti);
+[shapes]= PlayingField(param.obs.amount,param.obs.size,[field.length field.width field.height],param.obs.verti);
 hold on;
 scatter3(start(1), start(2), start(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
 scatter3(goal(1), goal(2), goal(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
 
 N = 5*1e3;
-nodes = nan(2, N+1);
-edges = nan(2, N+1);
+nodes = zeros(dim, N+1);
+edges = zeros(2, N+1);
 
 nodes(:, 1) = start;
 nodeDist = @(q1, q2) sum((q2 - q1).^2, 1);
 
-
 gamma = 3; % can be calculated explicitely
 
 for i=2:N+1
-    q_new = field.bound.*rand(2,1);
-
-    % check if q_new is in collision
-
-
+    q_new = field.bound.*rand(dim,1);
     
-%     original RRT
-    [~, I] = min(nodeDist(q_new, nodes));
-    edges(:, i) = [I, i]; % "connection via indices"
-    nodes(:, i) = q_new;
-
-    % Optimal RRT
-    % find nearest nodes
-    % connect node to edge
-    % reconnect node to edge with smallest path
-     
+    % check if q_new is in collision
+%     coll = DroneInObstacle(q_new,shapes,param.drone.r);
+%     if ~coll
+        % original RRT
+        [~, I] = min(nodeDist(q_new, nodes));
+        edges(:, i) = [I, i]; % "connection via indices"
+        nodes(:, i) = q_new;
+        % Optimal RRT
+%         [nodes_near]=findNearNodes(nodes, q_new, dim, gamma);
+%     end     
 end
 
 for i=2:N+1
     line([nodes(1, edges(1, i)) nodes(1, edges(2, i))], ...
          [nodes(2, edges(1, i)) nodes(2, edges(2, i))], ...
+         [nodes(3, edges(1, i)) nodes(3, edges(2, i))], ...
          'Color', 'black')
 end

@@ -1,4 +1,4 @@
-function [shapes]= PlayingField(amount,size,field_size,param.verti)
+function [shapes]= PlayingField(amount,size,field_size,verti)
 x_pos=rand(amount,1)*field_size(1);
 y_pos=rand(amount,1)*field_size(2);
 z_pos=rand(amount,1)*field_size(3);
@@ -7,7 +7,7 @@ z_pos=rand(amount,1)*field_size(3);
 % z_pos=0;
 
 for u=1:amount
-n = param.verti; % Number of vertices
+n = verti; % Number of vertices
 theta = 2*pi*rand(n,1)-pi; % Random theta
 phi = pi*rand(n,1) - pi/2; % Random phi
 x = cos(phi).*cos(theta).*size+x_pos(u); % Create x values
