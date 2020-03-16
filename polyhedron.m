@@ -1,4 +1,4 @@
-close all
+function [shp] = polyhedron(maxField)
 n = 12; % Number of vertices
 r=0.5;
 theta = 2*pi*rand(n,1)-pi; % Random theta
@@ -21,11 +21,11 @@ P = unique(P,'rows');
 % hold on
 % plot3(S(:,1),S(:,2),S(:,3),'.')
 shp = alphaShape(P(:,1),P(:,2),P(:,3),1);
-plot(shp)
-axis equal
-grid on
-hold on
-plot(shp2)
-axis equal
+% plot(shp)
+% axis equal
+% grid on
+% hold on
+% plot(shp2)
+% axis equal
 tf = inShape(shp,x1,y1,z1);
 coll=any(tf)
