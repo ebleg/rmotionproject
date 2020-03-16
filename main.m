@@ -16,17 +16,18 @@ field.bound = [field.length, field.width, field.height]';
 
 start = [10, 10, 3]';
 goal = [10, 10, 15]';
+dim = 3;        % Dimension of the workspace
+amount = 15;     % Amount of obstacles in the workspace
 
 figure
 plot3(field.length, field.width, field.height)
-xlim([0 field.length])
+xlim([0 field.length]);
 ylim([0 field.width]);
 zlim([0 field.height]);
 xlabel('x');
 ylabel('y');
 zlabel('z');
 grid on; grid minor;
-axis equal
 
 %% Obstacle in 2D
 % obstacleColor = [0 .5 .5];
@@ -38,9 +39,10 @@ axis equal
 % scatter(goal(1), goal(2), 'filled', 'MarkerEdgeColor', [0 0 0]);
 
 %% Obstacle in 3D
-[shp] = polyhedron();
+[shp] = polyhedron(field.bound, amount);
 hold on;
-plot(shp)
+scatter3(start(1), start(2), start(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
+scatter3(goal(1), goal(2), goal(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
 
 N = 5*1e3;
 nodes = nan(2, N+1);
@@ -49,7 +51,7 @@ edges = nan(2, N+1);
 nodes(:, 1) = start;
 nodeDist = @(q1, q2) sum((q2 - q1).^2, 1);
 
-dim = 2;
+
 gamma = 3; % can be calculated explicitely
 
 for i=2:N+1
