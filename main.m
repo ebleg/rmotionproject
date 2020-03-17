@@ -39,7 +39,7 @@ grid on; grid minor;
 % scatter(goal(1), goal(2), 'filled', 'MarkerEdgeColor', [0 0 0]);
 
 %% Obstacle in 3D
-[shapes]= PlayingField(param.obs.amount,param.obs.size,[field.length field.width field.height],param.obs.verti);
+[shapes]= PlayingField(param.obs.amount,param.obs.size,[field.length field.width field.height],param.obs.verti,  start, goal);
 hold on;
 scatter3(start(1), start(2), start(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
 scatter3(goal(1), goal(2), goal(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
@@ -55,16 +55,15 @@ gamma = 3; % can be calculated explicitely
 
 for i=2:N+1
     q_new = field.bound.*rand(dim,1);
-    
+    [~, I] = min(nodeDist(q_new, nodes));
+    nodes(:, i) = q_new;
     % check if q_new is in collision
-%     coll = DroneInObstacle(q_new,shapes,param.drone.r);
+    coll = DroneInObstacle(q_new,shapes,param.drone.r);
 %     if ~coll
-        % original RRT
-        [~, I] = min(nodeDist(q_new, nodes));
+        % Optimal RRT
+        [nodes_near]=findNearNodes(nodes, q_new, dim, gamma, nodeDist);
         edges(:, i) = [I, i]; % "connection via indices"
         nodes(:, i) = q_new;
-        % Optimal RRT
-%         [nodes_near]=findNearNodes(nodes, q_new, dim, gamma);
 %     end     
 end
 
