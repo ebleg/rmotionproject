@@ -14,10 +14,8 @@ field.height = 20;  %z-coordinate
 field.center = 0.5*[field.length, field.width, field.height]';
 field.bound = [field.length, field.width, field.height]';
 
-start = [-1, 10, 10]';
-goal = [21, 10, 10]';
-dim = 3;        % Dimension of the workspace
-amount = 15;     % Amount of obstacles in the workspace
+start = [10, 10, 3]';
+goal = [10, 10, 15]';
 
 figure
 plot3(field.length, field.width, field.height)
@@ -44,31 +42,30 @@ hold on;
 scatter3(start(1), start(2), start(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
 scatter3(goal(1), goal(2), goal(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
 
-N = 5*1e3;
-nodes = zeros(dim, N+1);
-edges = zeros(2, N+1);
+N = 5e2; 
+nodes = zeros(param.dim, N+1);
+edges = zeros(2, 1);
 
 nodes(:, 1) = start;
-nodeDist = @(q1, q2) sum((q2 - q1).^2, 1);
+nodeDist = @(q1, q2) ((sum(q2-q1,1).^2).^0.5);
 
-gamma = 3; % can be calculated explicitely
+gamma = 60; % can be calculated explicitely
 
 for i=2:N+1
-    q_new = field.bound.*rand(dim,1);
-    [~, I] = min(nodeDist(q_new, nodes));
+    q_new = field.bound.*rand(param.dim,1);
     nodes(:, i) = q_new;
-    % check if q_new is in collision
     coll_point = DroneInObstacle(q_new,shapes,param.drone.r);   %check if point is a valaible position for the drone
-    if coll==0
-        % Optimal RRT
-        [nodes_near]=findNearNodes(nodes, q_new, dim, gamma, nodeDist);
-        coll_near_node=LineInObstacle(q_new,nodes_near,shapes);     %Check for every noded if the route to that node collides woth obstacle
-        edges(:, i) = [I, i]; % "connection via indices"
-        nodes(:, i) = q_new;
-    end     
+    if coll_point==0
+        [nodes_near]=findNearNodes(nodes, q_new, param.dim, gamma, nodeDist);
+%         coll_near_node=LineInObstacle(q_new,nodes_near,nodes,shapes);     %Check for every noded if the route to that node collides woth obstacle
+%         if coll_near_node==0
+            new_edge = [nodes_near(1); i];
+            edges = [edges new_edge]; % "connection via indices"
+%         end
+    end
 end
 
-for i=2:N+1
+for i=2:length(edges)
     line([nodes(1, edges(1, i)) nodes(1, edges(2, i))], ...
          [nodes(2, edges(1, i)) nodes(2, edges(2, i))], ...
          [nodes(3, edges(1, i)) nodes(3, edges(2, i))], ...

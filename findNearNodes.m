@@ -1,17 +1,17 @@
 function [nodes_near]=findNearNodes(nodes, q_new, dim, gamma, nodeDist)
+% dim = param.dim;
 n = nnz(nodes)/dim;
 ball_radius = gamma * nthroot(log(n)/(n),dim);
-I = NaN(length(n));
-for i = 1:length(n)
-    Dist = nodeDist(nodes, q_new);
-    if Dist <= ball_radius
-        [~, I] = [Dist, indices];
-    end
-    [nodes_near] = I;
+Dist =[];
+idx = [];
+nodes_near =[];
+for k = 1:n-1
+    Dist(k) = nodeDist(q_new, nodes(:,k));
 end
-
-% [indices,dists] = findNeighborsInRadius(nodes,q_new,ball_radius);
-% q_near = rangesearch([nodes(1) nodes(2)], [q_new(1) q_new(2)], ball_radius);
-% q_near = str2double (q_near);
-% [~, I] = min(nodeDist(q_new, q_near));
+for j = 1:length(Dist)
+    if Dist(j) <= ball_radius
+        [~, idx] = sort(Dist); 
+    end
+end
+nodes_near = idx;
 end
