@@ -1,7 +1,9 @@
 function [shapes]= PlayingFieldV2(amount,size,field_size,verti)
-x_pos=rand(amount,1)*field_size(1);
-y_pos=rand(amount,1)*field_size(2);
-z_pos=rand(amount,1)*field_size(3);
+%create random location of obstacles such that the obstacle does not hit
+%the goal or end position of drone
+x_pos=(field_size(1)-size)*rand(amount,1)+size/2;
+y_pos=field_size(2)*rand(amount,1);
+z_pos=field_size(3)*rand(amount,1);
 % x_pos=0;
 % y_pos=0;
 % z_pos=0;

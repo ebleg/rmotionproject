@@ -2,6 +2,7 @@ function [nodes_near]=findNearNodes(nodes, q_new, dim, gamma, nodeDist)
 % dim = param.dim;
 n = nnz(nodes)/dim;
 ball_radius = gamma * nthroot(log(n)/(n),dim);
+% ball_radius=1;
 Dist =[];
 idx = [];
 nodes_near =[];
