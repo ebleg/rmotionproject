@@ -52,21 +52,22 @@ nodeDist = @(q1, q2) ((sum(q2-q1,1).^2).^0.5);
 gamma = 60; % can be calculated explicitely
 
 for i=2:N+1
-    i
     q_new = field.bound.*rand(param.dim,1);
     nodes(:, i) = q_new;
     coll_point = DroneInObstacle(q_new,shapes,param.drone.r);   %check if point is a valaible position for the drone
     if coll_point==0
-        [nodes_near]=findNearNodes(nodes, q_new, param.dim, gamma, nodeDist);
-        coll_near_node=LineInObstacle(q_new,nodes_near,nodes,shapes);    %Check for every noded if the route to that node collides woth obstacle
-        q=size(coll_near_node,2);
-        for o=1:q
-        if coll_near_node(o)==0
-            new_edge = [nodes_near(o); i];
+        [nodes_near]=findNearNodes(nodes, q_new, param.dim, gamma, nodeDist);  % check if connection with closest node goes throug obstacle
+        if size(nodes_near)>0
+            t=0;
+            coll_near_node=1;    %Check for every noded if the route to that node collides woth obstacle
+            while coll_near_node==1
+                t=t+1;
+                coll_near_node=LineInObstacle(q_new,nodes(:,nodes_near(t)),shapes);
+            end
+            new_edge = [nodes_near(t); i];
             edges = [edges new_edge]; % "connection via indices"
         end
-        end
-    end
+     end
 end
 
 % scatter3(nodes(1,:),nodes(2,:),nodes(3,:))
