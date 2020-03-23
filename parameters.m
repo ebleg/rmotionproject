@@ -21,6 +21,7 @@ param.drone.rotor.Km = 7.5e-7;
 
 param.drone.Kt = diag([0.1 0.1 0.15]);
 
+
 param.sp.psi0 = 0;
 
 param.pid.Kd = 1;
