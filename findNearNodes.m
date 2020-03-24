@@ -1,12 +1,14 @@
-function [nodes_near]=findNearNodes(nodes, q_new, dim, gamma, nodeDist)
+function [distance, nodes_near]=findNearNodes(nodes, q_new, dim, gamma, nodeDist)
 % Returns the indices from the matrix 'nodes' that are within a given ball radius
 % These indices are sorted from nearest nodes to farest away within the
 % given ball radius
 
+% TODO: Fix that the first random point is connected to the start if
+% possible and that it is not possible that separate trees exists.
+
 % dim = param.dim;
-n = nnz(nodes)/dim;
+n = nnz(nodes)/dim + 1;
 ball_radius = gamma * nthroot(log(n)/(n),dim);
-% ball_radius=1;
 Dist =[];
 idx = [];
 nodes_near =[];
@@ -15,7 +17,7 @@ for k = 1:n-1
 end
 for j = 1:length(Dist)
     if Dist(j) <= ball_radius
-        [~, idx] = sort(Dist); 
+        [distance, idx] = sort(Dist); 
     end
 end
 nodes_near = idx;
