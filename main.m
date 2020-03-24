@@ -61,13 +61,15 @@ for i=2:N+1
         [distance, nodes_near]=findNearNodes(nodes, q_new, param.dim, gamma, nodeDist);  % check if connection with closest node goes throug obstacle
         if ~isempty(nodes_near)
             t=1;
-            coll_near_node=1;    %Check for every noded if the route to that node collides woth obstacle
-            while coll_near_node==1 && length(nodes_near)>t
-                coll_near_node=LineInObstacle(q_new,nodes(:,nodes_near(t)),shapes);
+            coll_near_node=1;    %Check for every noded if the route to that node collides with obstacle
+            while coll_near_node==1 && length(nodes_near)>=t
+                coll_near_node=LineInObstacle(q_new,nodes(:,nodes_near(t)),shapes,param.drone.r);
                 t=t+1;
             end
-            new_edge = [nodes_near(t); i];
-            edges = [edges new_edge]; % "connection via indices"
+            if coll_near_node==0
+                new_edge = [nodes_near(t-1); i];
+                edges = [edges new_edge]; % "connection via indices"
+            end
         else
             nodes(:,i)=[0, 0, 0]';
         end
@@ -85,5 +87,5 @@ for i=2:length(edges)
     line([nodes(1, edges(1, i)) nodes(1, edges(2, i))], ...
          [nodes(2, edges(1, i)) nodes(2, edges(2, i))], ...
          [nodes(3, edges(1, i)) nodes(3, edges(2, i))], ...
-         'Color', 'black')
+         'Color', 'red')
 end

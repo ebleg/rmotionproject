@@ -11,6 +11,7 @@ n = nnz(nodes)/dim + 1;
 ball_radius = gamma * nthroot(log(n)/(n),dim);
 Dist =[];
 idx = [];
+distance=[];
 nodes_near =[];
 for k = 1:n-1
     Dist(k) = nodeDist(q_new, nodes(:,k));
