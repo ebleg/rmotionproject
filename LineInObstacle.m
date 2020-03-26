@@ -1,6 +1,6 @@
 function [coll_node]=LineInObstacle(point2,nodes_near2,shapes2,r)
 n=100;  %number of points on line
-s3=25;   %amount of sphere points
+s3=8;   %amount of sphere points
 % nodes_1=nodes2(:,nodes_near2);
 % s=size(nodes_1,2);   %number of loops for checking every nearby point
 s2=size(shapes2,2);      %number of loops for checking with every shape
