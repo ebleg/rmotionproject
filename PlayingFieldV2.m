@@ -19,7 +19,7 @@ P = [x y z];
 P = unique(P,'rows');
 shp = alphaShape(P(:,1),P(:,2),P(:,3),size);
 shapes(u).alpha=shp;
-plot(shp)
+plot(shapes(u).alpha)
 hold on
 end
 end

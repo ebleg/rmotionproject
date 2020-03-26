@@ -31,8 +31,8 @@ param.pid.Kp = 1;
 %% General parameters
 param.dim = 3;
 param.env.g = 9.80665;
-param.obs.size= 5;
-param.obs.amount=4;
+param.obs.size= 4;
+param.obs.amount=10;
 param.obs.verti=12;
 
 %% Initial conditions
