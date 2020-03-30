@@ -38,11 +38,14 @@ grid on; grid minor;
 
 %% Obstacle in 3D
 hold on;
-[shapes]= PlayingFieldV2(param.obs.amount,param.obs.size,[field.length field.width field.height],param.obs.verti);
+[shapes] = PlayingFieldV2(param.obs.amount,param.obs.size,[field.length field.width field.height],param.obs.verti);
 scatter3(start(1), start(2), start(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
-scatter3(goal(1), goal(2), goal(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
+text(start(1), start(2), start(3), '  Start node')
 
-N = 1e2;
+scatter3(goal(1), goal(2), goal(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
+text(goal(1), goal(2), goal(3), '  Target node')
+
+N = 40;
 nodes = zeros(param.dim, N+1);
 edges = [];
 path = [];
@@ -64,13 +67,13 @@ while i<=N+1
     end
     nodes(:, i) = q_new;
     % Check whether the random point collides with an obstacle
-    coll_point = DroneInObstacle(q_new,shapes,param.drone.r);   %check if point is a valaible position for the drone
+    coll_point = DroneInObstacle(q_new, shapes, param.drone.r);   %check if point is a valaible position for the drone
     % If the new point is not in collision, the best edges will be
     % determined, otherwise the point will be deleted.
-    if coll_point==0
+    if ~coll_point
         % If there are points nearby, a connection will be made, if not the
         % point is deleted.
-        [distance, nodes_near, ball_radius]=findNearNodes(nodes, q_new, param.dim, gamma, nodeDist);  % check if connection with closest node goes throug obstacle
+        [distance, nodes_near, ball_radius] = findNearNodes(nodes, q_new, param.dim, gamma, nodeDist);  % check if connection with closest node goes throug obstacle
         if ~isempty(nodes_near)
             % For all points within the ball radius, it is checked if the
             % edge between the new point and the other points collides with
@@ -80,17 +83,17 @@ while i<=N+1
             cost_tmp = inf(length(nodes_near),1);
             coll_near_node = ones(length(nodes_near),1);
             for t=1:length(nodes_near)
-                coll_near_node(t)=LineInObstacle(q_new,nodes(:,nodes_near(t)),shapes,param.drone.r);
-                if coll_near_node(t)==0
-                    cost_tmp(t) = cost(nodes_near(t))+ distance(t);
+                coll_near_node(t) = LineInObstacle(q_new,nodes(:,nodes_near(t)),shapes,param.drone.r);
+                if ~coll_near_node(t)
+                    cost_tmp(t) = cost(nodes_near(t)) + distance(t);
                 end
             end
-            if (length(coll_near_node) - nnz(coll_near_node))>0 % Als iemand iets beters hiervoor weet...
+            if (length(coll_near_node) - nnz(coll_near_node)) > 0 % Als iemand iets beters hiervoor weet...
                 [cost(i), idx_min_cost] = min(cost_tmp);
                 new_edge = [nodes_near(idx_min_cost); i];
                 edges = [edges new_edge]; % "connection via indices"
-                nodes_near(idx_min_cost)=[];
-                distance(idx_min_cost)=[];
+                nodes_near(idx_min_cost) = [];
+                distance(idx_min_cost) = [];
             else
                 nodes(:,i)=[0, 0, 0]';
                 i=i-1;
