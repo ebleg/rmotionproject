@@ -14,6 +14,8 @@ field.height = 20;  %z-coordinate
 field.center = 0.5*[field.length, field.width, field.height]';
 field.bound = [field.length, field.width, field.height]';
 
+swave = 0.1*sin(0.5*(1:1000));
+
 start = [0, 0, 0]';
 goal = [field.length, field.width, field.height]';
 
@@ -30,21 +32,21 @@ axis equal;
 
 %% Obstacle in 3D
 hold on;
-[shapes] = PlayingFieldV2(param.obs.amount,param.obs.size,[field.length field.width field.height],param.obs.verti);
-% shapes = struct();
-% shp1 = alphaShape([0 0 20 20 0 0 20 20]', [0 15 0 15 0 15 0 15]', [3.5*ones(4,1); 4.5*ones(4,1)]); 
-% shp2 = alphaShape([0 0 20 20 0 0 20 20]', [5 20 5 20 5 20 5 20]', [7.5*ones(4,1); 8.5*ones(4,1)]); 
-% shp3 = alphaShape([0 0 20 20 0 0 20 20]', [0 15 0 15 0 15 0 15]', [11.5*ones(4,1); 12.5*ones(4,1)]); 
-% shp4 = alphaShape([0 0 20 20 0 0 20 20]', [5 20 5 20 5 20 5 20]', [15.5*ones(4,1); 16.5*ones(4,1)]); 
-% 
-% plot(shp1);
-% plot(shp2);
-% plot(shp3);
-% plot(shp4);
-% shapes(1).alpha = shp1;
-% shapes(2).alpha = shp2;
-% shapes(3).alpha = shp3;
-% shapes(4).alpha = shp4;
+% [shapes] = PlayingFieldV2(param.obs.amount,param.obs.size,[field.length field.width field.height],param.obs.verti);
+shapes = struct();
+shp1 = alphaShape([0 0 20 20 0 0 20 20]', [0 15 0 15 0 15 0 15]', [3.5*ones(4,1); 4.5*ones(4,1)]); 
+shp2 = alphaShape([0 0 20 20 0 0 20 20]', [5 20 5 20 5 20 5 20]', [7.5*ones(4,1); 8.5*ones(4,1)]); 
+shp3 = alphaShape([0 0 20 20 0 0 20 20]', [0 15 0 15 0 15 0 15]', [11.5*ones(4,1); 12.5*ones(4,1)]); 
+shp4 = alphaShape([0 0 20 20 0 0 20 20]', [5 20 5 20 5 20 5 20]', [15.5*ones(4,1); 16.5*ones(4,1)]); 
+
+plot(shp1);
+plot(shp2);
+plot(shp3);
+plot(shp4);
+shapes(1).alpha = shp1;
+shapes(2).alpha = shp2;
+shapes(3).alpha = shp3;
+shapes(4).alpha = shp4;
 
 scatter3(start(1), start(2), start(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
 text(start(1), start(2), start(3), '  Start node')
@@ -52,7 +54,7 @@ text(start(1), start(2), start(3), '  Start node')
 scatter3(goal(1), goal(2), goal(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
 text(goal(1), goal(2), goal(3), '  Target node')
 
-N = 80;
+N = 200;
 title(strcat("RRT* path planning: i=2/", string(N)), 'Fontsize', 18);
 
 nodes = zeros(param.dim, N+1);
@@ -64,7 +66,7 @@ nodes(:, 1) = start;
 cost(1) = 0; % Cost of the start is zero.
 nodeDist = @(q1, q2) (sum((q2-q1).^2,1).^0.5);
 
-gamma = 10; % can be calculated explicitely
+gamma = 30; % can be calculated explicitely
 
 i=2;
 while i<=N+1
@@ -107,6 +109,7 @@ while i<=N+1
                     [nodes(2, nodes_near(idx_min_cost)) nodes(2, i)], ...
                     [nodes(3, nodes_near(idx_min_cost)) nodes(3, i)], ...
                     'Color', 'black', 'Linewidth', 2)
+%                 sound(swave);
                 pause(0.01)
                 
                 edges = [edges new_edge]; % "connection via indices"
@@ -135,6 +138,7 @@ while i<=N+1
                                  [nodes(2, ind) nodes(2, i)], ...
                                  [nodes(3, ind) nodes(3, i)], ...
                                  'Color', 'red', 'Linewidth', 2)
+%                             sound(swave);
                             pause(0.01)
                             edges = [edges new_edge]; % "connection via indices"
                         end

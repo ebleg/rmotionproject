@@ -32,7 +32,7 @@ param.dim = 3;
 param.env.g = 9.80665;
 param.obs.size= 5;
 % param.obs.amount=15;
-param.obs.amount=20; % for simple maze
+param.obs.amount=3; % for simple maze
 param.obs.verti=12;
 
 %% Initial conditions
