@@ -45,7 +45,7 @@ text(start(1), start(2), start(3), '  Start node')
 scatter3(goal(1), goal(2), goal(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
 text(goal(1), goal(2), goal(3), '  Target node')
 
-N = 50;
+N = 80;
 nodes = zeros(param.dim, N+1);
 edges = [];
 path = [];

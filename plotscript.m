@@ -1,4 +1,4 @@
-%% MAIN WITH VISUALISATION
+%% MAIN ALTERED TO MEASURE RESULTS
 clear;
 close all;
 
@@ -31,28 +31,42 @@ axis equal;
 %% Obstacle in 3D
 hold on;
 [shapes] = PlayingFieldV2(param.obs.amount,param.obs.size,[field.length field.width field.height],param.obs.verti);
-% shapes = struct();
-% shp1 = alphaShape([0 0 20 20 0 0 20 20]', [0 15 0 15 0 15 0 15]', [3.5*ones(4,1); 4.5*ones(4,1)]); 
-% shp2 = alphaShape([0 0 20 20 0 0 20 20]', [5 20 5 20 5 20 5 20]', [7.5*ones(4,1); 8.5*ones(4,1)]); 
-% shp3 = alphaShape([0 0 20 20 0 0 20 20]', [0 15 0 15 0 15 0 15]', [11.5*ones(4,1); 12.5*ones(4,1)]); 
-% shp4 = alphaShape([0 0 20 20 0 0 20 20]', [5 20 5 20 5 20 5 20]', [15.5*ones(4,1); 16.5*ones(4,1)]); 
-% 
-% plot(shp1);
-% plot(shp2);
-% plot(shp3);
-% plot(shp4);
-% shapes(1).alpha = shp1;
-% shapes(2).alpha = shp2;
-% shapes(3).alpha = shp3;
-% shapes(4).alpha = shp4;
-
 scatter3(start(1), start(2), start(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
 text(start(1), start(2), start(3), '  Start node')
 
 scatter3(goal(1), goal(2), goal(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
 text(goal(1), goal(2), goal(3), '  Target node')
 
-N = 80;
+%% Plotscript start -> rounds
+
+
+NumberofRounds= 7; %number rounds to test parameters (N or gamma)
+
+
+TestRounds = 2 + NumberofRounds;
+Benchmark = zeros (5,TestRounds);
+
+for round = 3:TestRounds
+
+   N = 30
+    
+    %% Start of plotscript
+    
+    
+NumberofRuns = 2; %number of runs per parameter setting
+TotalDistance = zeros(NumberofRuns,1);
+
+
+%PathDistance = zeros(NumberofRuns,1);
+tic
+for Run = 1:NumberofRuns
+%% Parameters plotscript
+
+gamma = round*8; % can be calculated explicitely
+i=2;
+
+%%
+
 title(strcat("RRT* path planning: i=2/", string(N)), 'Fontsize', 18);
 
 nodes = zeros(param.dim, N+1);
@@ -64,9 +78,7 @@ nodes(:, 1) = start;
 cost(1) = 0; % Cost of the start is zero.
 nodeDist = @(q1, q2) (sum((q2-q1).^2,1).^0.5);
 
-gamma = 10; % can be calculated explicitely
 
-i=2;
 while i<=N+1
     % Sample random new point in the workspace
     if i==N+1
@@ -101,13 +113,13 @@ while i<=N+1
                 [cost(i), idx_min_cost] = min(cost_tmp);                
                 new_edge = [nodes_near(idx_min_cost); i];
                 
-                scatter3(nodes(1,i),nodes(2,i),nodes(3,i), 'o', 'MarkerFaceColor', 'c', 'MarkerEdgeColor', 'black')
-                text(nodes(1,i)+0.8,nodes(2,i)+0.8,nodes(3,i)+0.8,num2str(i))
-                line([nodes(1, nodes_near(idx_min_cost)) nodes(1, i)], ...
-                    [nodes(2, nodes_near(idx_min_cost)) nodes(2, i)], ...
-                    [nodes(3, nodes_near(idx_min_cost)) nodes(3, i)], ...
-                    'Color', 'black', 'Linewidth', 2)
-                pause(0.01)
+%                 scatter3(nodes(1,i),nodes(2,i),nodes(3,i), 'o', 'MarkerFaceColor', 'c', 'MarkerEdgeColor', 'black') %WEGCOMMENTEN
+%                 text(nodes(1,i)+0.8,nodes(2,i)+0.8,nodes(3,i)+0.8,num2str(i))
+%                 line([nodes(1, nodes_near(idx_min_cost)) nodes(1, i)], ...
+%                     [nodes(2, nodes_near(idx_min_cost)) nodes(2, i)], ...
+%                     [nodes(3, nodes_near(idx_min_cost)) nodes(3, i)], ...
+%                     'Color', 'black', 'Linewidth', 2)
+%                 pause(0.05)
                 
                 edges = [edges new_edge]; % "connection via indices"
                 nodes_near(idx_min_cost) = [];
@@ -129,13 +141,13 @@ while i<=N+1
                             new_edge = [i; nodes_near(t)];
            
                             ind = nodes_near(t);
-                            scatter3(nodes(1,i),nodes(2,i),nodes(3,i), 'o', 'MarkerFaceColor', 'c', 'MarkerEdgeColor', 'black')
-                            text(nodes(1,i)+0.8,nodes(2,i)+0.8,nodes(3,i)+0.8,num2str(i))
-                            line([nodes(1, ind) nodes(1, i)], ...
-                                 [nodes(2, ind) nodes(2, i)], ...
-                                 [nodes(3, ind) nodes(3, i)], ...
-                                 'Color', 'red', 'Linewidth', 2)
-                            pause(0.01)
+%                             scatter3(nodes(1,i),nodes(2,i),nodes(3,i), 'o', 'MarkerFaceColor', 'c', 'MarkerEdgeColor', 'black') %WEGCOMMENTEN
+%                             text(nodes(1,i)+0.8,nodes(2,i)+0.8,nodes(3,i)+0.8,num2str(i))
+%                             line([nodes(1, ind) nodes(1, i)], ...
+%                                  [nodes(2, ind) nodes(2, i)], ...
+%                                  [nodes(3, ind) nodes(3, i)], ...
+%                                  'Color', 'red', 'Linewidth', 2)
+%                             pause(0.05)
                             edges = [edges new_edge]; % "connection via indices"
                         end
                     end
@@ -146,29 +158,29 @@ while i<=N+1
             end
                   
             %% REFRESH PLOT %%%%%%%%%%%%%%%%%%%%%%%
-            cla;
-            for k=1:param.obs.amount
-                plot(shapes(k).alpha, 'FaceAlpha', 0.5, 'EdgeAlpha', 0.2) % plot obstacles;
-            end
-            scatter3(start(1), start(2), start(3), 'filled', 'MarkerEdgeColor', 'black', 'MarkerFaceColor', 'cyan');
-            text(start(1), start(2), start(3), '  Start node')
-            scatter3(goal(1), goal(2), goal(3), 'filled', 'MarkerEdgeColor', [0 0 0], 'MarkerFaceColor', 'red');
-            text(goal(1), goal(2), goal(3), '  Target node')
-            
-            for k=1:i
-                scatter3(nodes(1,k),nodes(2,k),nodes(3,k), 'o', 'MarkerFaceColor', 'c', 'MarkerEdgeColor', 'black')
-                text(nodes(1,k)+0.8,nodes(2,k)+0.8,nodes(3,k)+0.8,num2str(k))                
-            end
-            if i > 2
-                for j=1:length(edges)
-                    line([nodes(1, edges(1, j)) nodes(1, edges(2, j))], ...
-                        [nodes(2, edges(1, j)) nodes(2, edges(2, j))], ...
-                        [nodes(3, edges(1, j)) nodes(3, edges(2, j))], ...
-                        'Color', 'black')
-                end
-            end
-            title(strcat("RRT* path planning: i=", string(i), '/', string(N+1)), 'Fontsize', 18);
-            pause(0.01);
+%             cla;
+%             for k=1:param.obs.amount
+%                 plot(shapes(k).alpha) % plot obstacles;
+%             end
+%             scatter3(start(1), start(2), start(3), 'filled', 'MarkerEdgeColor', 'black', 'MarkerFaceColor', 'cyan');
+%             text(start(1), start(2), start(3), '  Start node')
+%             scatter3(goal(1), goal(2), goal(3), 'filled', 'MarkerEdgeColor', [0 0 0], 'MarkerFaceColor', 'red');
+%             text(goal(1), goal(2), goal(3), '  Target node')
+%             
+%             for k=1:i
+%                 scatter3(nodes(1,k),nodes(2,k),nodes(3,k), 'o', 'MarkerFaceColor', 'c', 'MarkerEdgeColor', 'black')
+%                 text(nodes(1,k)+0.8,nodes(2,k)+0.8,nodes(3,k)+0.8,num2str(k))                
+%             end
+%             if i > 2
+%                 for j=1:length(edges)
+%                     line([nodes(1, edges(1, j)) nodes(1, edges(2, j))], ...
+%                         [nodes(2, edges(1, j)) nodes(2, edges(2, j))], ...
+%                         [nodes(3, edges(1, j)) nodes(3, edges(2, j))], ...
+%                         'Color', 'black')
+%                 end
+%             end
+%             title(strcat("RRT* path planning: i=", string(i), '/', string(N+1)), 'Fontsize', 18);
+%             pause(0.05);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
         else
@@ -243,8 +255,39 @@ for j=2:length(path)
         [nodes(3, path(j-1)) nodes(3, path(j))], ...
         'Color', 'cyan', 'Linewidth', 2)
 end
-for i=1:360
-   camorbit(1,0,'data',[0 0 1])
-   pause(0.02);
-   drawnow
+
+
+deltaxyz = zeros(length(path)-1,3);
+NodeDistance = zeros(length(path)-1);
+
+for i=1:(length(path)-1)
+    
+    delta_x = nodes(1,path(i+1)) - nodes(1,path(i));
+    delta_y = nodes(2,path(i+1)) - nodes(2,path(i));
+    delta_z = nodes(3,path(i+1)) - nodes(3,path(i));
+    deltaxyz(i,1)= delta_x
+    deltaxyz(i,2)= delta_y
+    deltaxyz(i,3)= delta_z
+    
+    NodeDistance(i)=(deltaxyz(i,1).^2+deltaxyz(i,2).^2+deltaxyz(i,3).^2).^0.5
+    PathDistance = sum (NodeDistance)
+    
+end
+
+
+TotalDistance(Run) = PathDistance(1)
+
+end
+
+toc
+RunDistance = sum (TotalDistance)
+AverageDistance = RunDistance/NumberofRuns
+
+
+Benchmark(1,round)= NumberofRuns;
+Benchmark(2,round)= N;
+Benchmark(3,round)= gamma;
+Benchmark(4,round)= AverageDistance;
+Benchmark(5,round)= toc
+
 end
