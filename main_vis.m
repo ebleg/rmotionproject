@@ -31,6 +31,21 @@ axis equal;
 %% Obstacle in 3D
 hold on;
 [shapes] = PlayingFieldV2(param.obs.amount,param.obs.size,[field.length field.width field.height],param.obs.verti);
+% shapes = struct();
+% shp1 = alphaShape([0 0 20 20 0 0 20 20]', [0 15 0 15 0 15 0 15]', [3.5*ones(4,1); 4.5*ones(4,1)]); 
+% shp2 = alphaShape([0 0 20 20 0 0 20 20]', [5 20 5 20 5 20 5 20]', [7.5*ones(4,1); 8.5*ones(4,1)]); 
+% shp3 = alphaShape([0 0 20 20 0 0 20 20]', [0 15 0 15 0 15 0 15]', [11.5*ones(4,1); 12.5*ones(4,1)]); 
+% shp4 = alphaShape([0 0 20 20 0 0 20 20]', [5 20 5 20 5 20 5 20]', [15.5*ones(4,1); 16.5*ones(4,1)]); 
+% 
+% plot(shp1);
+% plot(shp2);
+% plot(shp3);
+% plot(shp4);
+% shapes(1).alpha = shp1;
+% shapes(2).alpha = shp2;
+% shapes(3).alpha = shp3;
+% shapes(4).alpha = shp4;
+
 scatter3(start(1), start(2), start(3), 'filled', 'MarkerEdgeColor', [0 0 0]);
 text(start(1), start(2), start(3), '  Start node')
 
@@ -92,7 +107,7 @@ while i<=N+1
                     [nodes(2, nodes_near(idx_min_cost)) nodes(2, i)], ...
                     [nodes(3, nodes_near(idx_min_cost)) nodes(3, i)], ...
                     'Color', 'black', 'Linewidth', 2)
-                pause(0.05)
+                pause(0.01)
                 
                 edges = [edges new_edge]; % "connection via indices"
                 nodes_near(idx_min_cost) = [];
@@ -120,7 +135,7 @@ while i<=N+1
                                  [nodes(2, ind) nodes(2, i)], ...
                                  [nodes(3, ind) nodes(3, i)], ...
                                  'Color', 'red', 'Linewidth', 2)
-                            pause(0.05)
+                            pause(0.01)
                             edges = [edges new_edge]; % "connection via indices"
                         end
                     end
@@ -133,7 +148,7 @@ while i<=N+1
             %% REFRESH PLOT %%%%%%%%%%%%%%%%%%%%%%%
             cla;
             for k=1:param.obs.amount
-                plot(shapes(k).alpha) % plot obstacles;
+                plot(shapes(k).alpha, 'FaceAlpha', 0.5, 'EdgeAlpha', 0.2) % plot obstacles;
             end
             scatter3(start(1), start(2), start(3), 'filled', 'MarkerEdgeColor', 'black', 'MarkerFaceColor', 'cyan');
             text(start(1), start(2), start(3), '  Start node')
@@ -153,7 +168,7 @@ while i<=N+1
                 end
             end
             title(strcat("RRT* path planning: i=", string(i), '/', string(N+1)), 'Fontsize', 18);
-            pause(0.05);
+            pause(0.01);
             %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
             
         else
